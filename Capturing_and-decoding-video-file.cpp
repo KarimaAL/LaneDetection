@@ -73,8 +73,8 @@ int main(int argc, char* argv[])
         /*namedWindow("Gaussian blur demo", WINDOW_NORMAL);
         imshow("Gaussian blur demo", greyMat);*/
 
-        namedWindow("Canny demo", WINDOW_NORMAL);
-        imshow("Canny demo", canny);
+       /* namedWindow("Canny demo", WINDOW_NORMAL);
+        imshow("Canny demo", canny);*/
 
          cv::Mat output;
          Mat mask = cv::Mat::zeros(canny.size(), canny.type());
@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
          cv::Point(867, 487),
          cv::Point(273, 487),
          cv::Point(11, 667),
-         cv::Point(1052, 667) };
+         cv::Point(1070, 667) };
 
   // Create a binary polygon mask
   cv::fillConvexPoly(mask, pts, 4, cv::Scalar(255, 0, 0));
@@ -91,6 +91,23 @@ int main(int argc, char* argv[])
 
   namedWindow("ROI demo", WINDOW_NORMAL);
   imshow("ROI demo", output);
+
+  vector<Vec4i> lines;
+
+  HoughLinesP(output, lines, 1, CV_PI / 180, 60, 60, 30);
+
+  // Draw lines on the image
+
+  for (size_t i = 0; i < lines.size(); i++)
+  {
+
+      Vec4i l = lines[i];
+
+      line(frame, Point(l[0], l[1]), Point(l[2], l[3]), Scalar(255, 0, 0), 3);
+
+  }
+  namedWindow("Hough demo", WINDOW_NORMAL);
+  imshow("Hough demo", frame);
 
 
 
