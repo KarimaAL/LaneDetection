@@ -9,7 +9,6 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     cv::VideoCapture cap("C:/Users/nassim/Music/edge-and-circle-detection/Lane detect test data.mp4");
-
     // if not success, exit program
     if (cap.isOpened() == false)
     {
@@ -17,8 +16,7 @@ int main(int argc, char* argv[])
         cin.get(); //wait for any key press
         return -1;
     }
-
-
+   
 
     //get the frames rate of the video
     double fps = cap.get(CAP_PROP_FPS);
@@ -29,7 +27,7 @@ int main(int argc, char* argv[])
 
 
     namedWindow(window_name, WINDOW_NORMAL); //create a window
-
+    
     while (true)
     {
         Mat frame;
@@ -54,6 +52,8 @@ int main(int argc, char* argv[])
             cout << "Esc key is pressed by user. Stoppig the video" << endl;
             break;
         }
+    
+
 
         Mat canny;
         Mat mb;
@@ -64,22 +64,36 @@ int main(int argc, char* argv[])
 
         
         cvtColor(frame, greyMat, COLOR_BGR2GRAY);
-        GaussianBlur(greyMat, greyMat, Size(7, 7), 1.5, 1.5);
-        /*  greyMat.convertTo(greyMat, CV_32F, 1.0 / 255.0);
-          pow(greyMat, 3.0, greyMat);
-          greyMat *= 3.0;
-          greyMat.convertTo(greyMat, CV_8U, 255.0);
-          dilate(greyMat, dilated,0);*/
 
           // medianBlur(greyMat, mb, 5);
         GaussianBlur(greyMat, greyMat, Size(7, 7), 1.5, 1.5);
 
         Canny(greyMat, canny, 0, 30, 3);
 
-        namedWindow("Gaussian blur demo", WINDOW_NORMAL);
-        imshow("Gaussian blur demo", greyMat);
+        /*namedWindow("Gaussian blur demo", WINDOW_NORMAL);
+        imshow("Gaussian blur demo", greyMat);*/
+
         namedWindow("Canny demo", WINDOW_NORMAL);
         imshow("Canny demo", canny);
+
+         cv::Mat output;
+         Mat mask = cv::Mat::zeros(canny.size(), canny.type());
+         Point pts[4] = {
+         cv::Point(867, 487),
+         cv::Point(273, 487),
+         cv::Point(11, 667),
+         cv::Point(1052, 667) };
+
+  // Create a binary polygon mask
+  cv::fillConvexPoly(mask, pts, 4, cv::Scalar(255, 0, 0));
+  // Multiply the edges image and the mask to get the output
+  cv::bitwise_and(canny, mask, output);
+
+  namedWindow("ROI demo", WINDOW_NORMAL);
+  imshow("ROI demo", output);
+
+
+
     }
 
 
