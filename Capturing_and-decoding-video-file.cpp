@@ -55,8 +55,31 @@ int main(int argc, char* argv[])
             break;
         }
 
-    
-       
+        Mat canny;
+        Mat mb;
+        Mat gb;
+        Mat greyMat;
+        cap >> frame; // get a new frame from camera
+      // cvtColor(frame, gray, COLOR_BGR2GRAY);
+
+        
+        cvtColor(frame, greyMat, COLOR_BGR2GRAY);
+        GaussianBlur(greyMat, greyMat, Size(7, 7), 1.5, 1.5);
+        /*  greyMat.convertTo(greyMat, CV_32F, 1.0 / 255.0);
+          pow(greyMat, 3.0, greyMat);
+          greyMat *= 3.0;
+          greyMat.convertTo(greyMat, CV_8U, 255.0);
+          dilate(greyMat, dilated,0);*/
+
+          // medianBlur(greyMat, mb, 5);
+        GaussianBlur(greyMat, greyMat, Size(7, 7), 1.5, 1.5);
+
+        Canny(greyMat, canny, 0, 30, 3);
+
+        namedWindow("Gaussian blur demo", WINDOW_NORMAL);
+        imshow("Gaussian blur demo", greyMat);
+        namedWindow("Canny demo", WINDOW_NORMAL);
+        imshow("Canny demo", canny);
     }
 
 
